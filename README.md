@@ -7,7 +7,7 @@ Ref: Borrel, A., Regad, L., Xhaard, H., Petitjean, M., & Camproux, A. C. (2015).
 
 #########################################################################################
     IMPORTANT: This script uses RADI to calculate the geometric descriptors 
-      (RADIUS_CYLINDER, SMALLEST_SIZE, VOLUME_HULL, RADIUS_HULL, DIAMETER_HULL, SURFACE_HULL) 
+      (RADIUS_CYLINDER, SMALLEST_SIZE, VOLUME_HULL, RADIUS_HULL, DIAMETER_HULL and SURFACE_HULL) 
 #########################################################################################
    
    script.sh [options] -i file.pdb -f RADI
