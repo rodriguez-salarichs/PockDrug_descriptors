@@ -1,9 +1,9 @@
 # PockDrug_descriptors_calculations
-This script calculates the PockDrug descriptors of a protein pocket. Also, it creates the matrix file used by PockDrug.R to solve the druggability of a portein pocket.
+This script calculates the PockDrug descriptors of a protein pocket. Also, it creates the matrix file used by PockDrug.R* to solve the druggability of a portein pocket.
 
-Ref: Borrel, A., Regad, L., Xhaard, H., Petitjean, M., & Camproux, A. C. (2015). PockDrug: a model for predicting pocket druggability that overcomes pocket estimation uncertainties. Journal of chemical information and modeling, 55(4), 882-895.
+*PockDrug software was published in A., Regad, L., Xhaard, H., Petitjean, M., & Camproux, A. C. (2015). PockDrug: a model for predicting pocket druggability that overcomes pocket estimation uncertainties. Journal of chemical information and modeling, 55(4), 882-895.
 
-
+If you use this script, please cite the website https://github.com/rodriguez-salarichs/PockDrug_descriptors_calculations/
 
 #########################################################################################
     IMPORTANT: This script uses RADI to calculate the geometric descriptors 
