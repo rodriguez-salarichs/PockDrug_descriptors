@@ -20,21 +20,25 @@ usage=$(cat << EOF
     options:
 
       -i PDB file
+      -n name of pocket
       -f RADI executable
       -h Print this help
 
     version:
 
-      version : 0.1
+      version : 1.0
       author : Dr. Javier Rodriguez-Salarichs
 
 EOF
 );
 
-while getopts ":i:f:h" opt; do
+while getopts ":i:n:f:h" opt; do
   case $opt in
     i)
       INPUT=$OPTARG
+      ;;
+    n)
+      NAME=$OPTARG
       ;;
     f)
       RADI=$OPTARG
@@ -61,12 +65,17 @@ if [ ${#INPUT} -eq 0 ];then
 	exit 1
 fi
 
+
+if [ ${#NAME} -eq 0 ] ;then
+	NAME="1"
+fi
+
 #echo $INPUT
 #echo "$H_kyle"
 
 #awk -v H_kyle="$H_kyle" 'BEGIN{k="NNN N NNN";i=0;split(H_kyle,c,"|");for(l=1;l<=20;l++){split(c[l],d,":");e[l,1]=d[1];e[l,2]=d[2]}}{if($0 ~ "ATOM"){ki=substr($0,17,10);if(k!=ki){k=ki;i++;a[i]=$4}}}END{for(l=1;l<=i;l++){for(x=1;x<=20;x++){if(e[x,1]==a[l]){sum+=e[x,2]}}};print sum/i}' $INPUT
 
-awk -v H_kyle="$H_kyle" 'BEGIN{k="NNN N NNN";i=0;iT=0;p_aromatic;p_Otyr=0;split(H_kyle,c,"|");for(l=1;l<=20;l++){split(c[l],d,":");e[l,1]=d[1];e[l,2]=d[2]}}{if($0 ~ "ATOM"){iT+=1;if($4=="TYR" && ($3 == "OH" || $3 == "HO")){p_Otyr+=1};ki=substr($0,17,10);if(k!=ki){k=ki;i++;a[i]=$4}}}END{for(l=1;l<=i;l++){if(a[l]=="PHE"||a[l]=="TYR"||a[l]=="HIS"||a[l]=="TRP"){p_aromatic+=1};for(x=1;x<=20;x++){if(e[x,1]==a[l]){sum+=e[x,2]}}};print "hydrophobicity_kyle:",sum/i,"\np_aromatic_residues:",p_aromatic/i,"\np_Otyr_atom:",p_Otyr/iT}' $INPUT
+awk -v H_kyle="$H_kyle" 'BEGIN{k="NNN N NNN";i=0;iT=0;p_aromatic;p_Otyr=0;split(H_kyle,c,"|");for(l=1;l<=20;l++){split(c[l],d,":");e[l,1]=d[1];e[l,2]=d[2]}}{if($0 ~ "ATOM"){iT+=1;if($4=="TYR" && ($3 == "OH" || $3 == "HO")){p_Otyr+=1};ki=substr($0,17,10);if(k!=ki){k=ki;i++;a[i]=$4}}}END{for(l=1;l<=i;l++){if(a[l]=="PHE"||a[l]=="TYR"||a[l]=="HIS"||a[l]=="TRP"){p_aromatic+=1};for(x=1;x<=20;x++){if(e[x,1]==a[l]){sum+=e[x,2]}}};print "hydrophobic_kyte",sum/i,"\np_aromatic_residues",p_aromatic/i,"\np_Otyr_atom",p_Otyr/iT}' $INPUT > Descriptors_$$.log
 
 
 echo -e "PDB\n"$INPUT"\nEPSTAB" &>text_$$.in
@@ -75,10 +84,18 @@ $RADI < text_$$.in &> text_$$.out
 
 rm text_$$.in
 
-awk '{if($0 ~"3D HULL : SURFACE"){print "SURFACE_HULL:",$6,"\nVOLUME_HULL:",$10};if($0 ~ "DIAMETER ="){print "DIAMETER_HULL:",$3};if($0 ~ "RADIUS   ="){print "RADIUS_HULL:",$3};if($0 ~ "SMALLEST SIZE :"){print "SMALLEST_SIZE:",$4};if($0 ~ "; RADIUS ="){print "RADIUS_CYLINDER:",$7}}' text_$$.out
+awk '{if($0 ~"3D HULL : SURFACE"){print "SURFACE_HULL",$6,"\nVOLUME_HULL",$10};if($0 ~ "DIAMETER ="){print "DIAMETER_HULL",$3};if($0 ~ "RADIUS   ="){print "RADIUS_HULL",$3};if($0 ~ "SMALLEST SIZE :"){print "SMALLEST_SIZE",$4};if($0 ~ "; RADIUS ="){print "RADIUS_CYLINDER",$7}}' text_$$.out >> Descriptors_$$.log
+
 
 rm text_$$.out
 
+
+INPUT=${INPUT%.*}
+
+awk -v NAME=$NAME 'BEGIN{OFS="";ORS="";}{a[1,NR]=$1;a[2,NR]=$2}END{for(i=1;i<=NR;i++){print a[1,i]"\t"};print "\npocket"NAME"\t";for(i=1;i<=NR;i++){print a[2,i]"\t"};print "\n"}' Descriptors_$$.log > $INPUT"_Descriptors_$$.txt"
+
+
+rm Descriptors_$$.log
 
 exit
 
