@@ -6,14 +6,17 @@ H_kyle="ILE:4.5|VAL:4.2|LEU:3.8|PHE:2.8|CYS:2.5|MET:1.9|ALA:1.8|GLY:-0.4|THR:-0.
 
 usage=$(cat << EOF
 
-    This script calculates the PockDrug descriptors of a pocket. 
+   This script calculates the necessary descriptors for calculating the druggability of a protein pocket using the PockDrug function. Also, it creates the matrix file used in PockDrug.R* to solve the druggability of a portein pocket.
 
-#########################################################################################
-    IMPORTANT: This script uses RADI to calculate the geometric descriptors 
-      (RADIUS_CYLINDER, SMALLEST_SIZE, VOLUME_HULL, RADIUS_HULL, DIAMETER_HULL, SURFACE_HULL) 
+   *PockDrug druggability function was published in "A., Regad, L., Xhaard, H., Petitjean, M., & Camproux, A. C. (2015). PockDrug: a model for predicting pocket druggability that overcomes pocket estimation uncertainties. Journal of chemical information and modeling, 55(4), 882-895." and the software can be found in its Supporting information.
 
-     Borrel, A., Regad, L., Xhaard, H., Petitjean, M., & Camproux, A. C. (2015). PockDrug: a model for predicting pocket druggability that overcomes pocket estimation uncertainties. Journal of chemical information and modeling, 55(4), 882-895.
-#########################################################################################
+   If you use this script, please cite the website https://github.com/rodriguez-salarichs/PockDrug_descriptors_calculations/
+
+   ######################################################################################### 
+   IMPORTANT: This script uses RADI to calculate the geometric descriptors 
+   (RADIUS_CYLINDER, SMALLEST_SIZE, VOLUME_HULL, RADIUS_HULL, DIAMETER_HULL and SURFACE_HULL) 
+   #########################################################################################
+
    
    script.sh [options] -i file.pdb -f RADI
 
